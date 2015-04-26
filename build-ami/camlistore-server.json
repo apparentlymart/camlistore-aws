@@ -1,0 +1,32 @@
+{
+    "variables": {
+        "aws_region": "us-west-2",
+        "source_ami": "ami-0d5b6c3d",
+        "aws_vpc_id": null,
+        "aws_subnet_id": null
+    },
+    "builders": [
+        {
+            "type": "amazon-ebs",
+            "instance_type": "m3.medium",
+            "ami_name": "camlistore-server {{timestamp}}",
+            "region": "{{user `aws_region`}}",
+            "source_ami": "{{user `source_ami`}}",
+            "ssh_username": "admin",
+            "ami_description": "Camlistore Server",
+            "associate_public_ip_address": true,
+            "subnet_id": "{{user `aws_subnet_id`}}",
+            "vpc_id": "{{user `aws_vpc_id`}}",
+            "user_data_file": "user_data",
+            "run_tags": {
+                "Name": "camlistore-server build"
+            }
+        }
+    ],
+    "provisioners": [
+        {
+            "type": "shell",
+            "script": "install-camlistore.sh"
+        }
+    ]
+}
